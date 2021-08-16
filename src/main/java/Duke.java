@@ -5,34 +5,52 @@ import java.io.InputStreamReader;
 public class Duke {
     public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    public static String outputIndent = "    ";
-    public static String textIndent = " ";
-    public static String line = "____________________________________________________________";
-    public static String logo = " ____        _        \n"
+    public static String OUTPUT_INDENT = "    ";
+    public static String TEXT_INDENT = " ";
+    public static String LINE = "____________________________________________________________";
+    public static String LOGO = " ____        _        \n"
                               + "|  _ \\ _   _| | _____ \n"
                               + "| | | | | | | |/ / _ \\\n"
                               + "| |_| | |_| |   <  __/\n"
                               + "|____/ \\__,_|_|\\_\\___|\n";
 
+    public static String[] welcomeMessages = {"Hello! I'm Duke", "What can I do for you?"};
+    public static String[] goodbyeMessages = {"Bye. Hope to see you again soon!"};
+
     public static void main(String[] args) throws IOException {
-        System.out.println(outputIndent + line);
-        System.out.println(outputIndent + textIndent + "Hello! I'm Duke");
-        System.out.println(outputIndent + textIndent + "What can I do for you?");
-        System.out.println(outputIndent + line);
-        System.out.println();
+        Duke.printMessages(welcomeMessages);
+
         while (true) {
-            String input = reader.readLine();
+            String input = Duke.getUserInput();
             if (input.equals("bye")) {
-                System.out.println(outputIndent + line);
-                System.out.println(outputIndent + textIndent + "Bye. Hope to see you again soon!");
-                System.out.println(outputIndent + line);
+                Duke.printMessages(goodbyeMessages);
                 break;
             }
 
-            System.out.println(outputIndent + line);
-            System.out.println(outputIndent + textIndent + input);
-            System.out.println(outputIndent + line);
-            System.out.println();
+            String[] defaultMessages = {input};
+            Duke.printMessages(defaultMessages);
         }
+    }
+
+    /**
+     * Prints an array of messages to the console.
+     * @param messages The array of messages to be printed.
+     */
+    public static void printMessages(String[] messages) {
+        System.out.println(Duke.OUTPUT_INDENT + Duke.LINE);
+        for (String message : messages) {
+            System.out.println(Duke.OUTPUT_INDENT + Duke.TEXT_INDENT + message);
+        }
+        System.out.println(Duke.OUTPUT_INDENT + Duke.LINE);
+    }
+
+    /**
+     * Prompts the user for an input.
+     * @return The input string
+     * @throws IOException If an I/O error occurs
+     */
+    public static String getUserInput() throws IOException {
+        System.out.println();
+        return reader.readLine();
     }
 }
