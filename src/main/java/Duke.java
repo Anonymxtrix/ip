@@ -19,30 +19,46 @@ public class Duke {
     public static String[] welcomeMessages = {"Hello! I'm Duke", "What can I do for you?"};
     public static String[] goodbyeMessages = {"Bye. Hope to see you again soon!"};
 
-    private static final List<String> list = new ArrayList<>();
+    private static final List<Task> list = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         Duke.printMessages(welcomeMessages);
 
         while (true) {
             String input = Duke.getUserInput();
+            String[] inputSubsections = input.split("\\s", 2);
+            String command = inputSubsections[0];
             
-            if (input.equals("bye")) {
+            if (command.equals("bye")) {
                 Duke.printMessages(goodbyeMessages);
                 break;
             }
 
-            if (input.equals("list")) {
+            if (command.equals("list")) {
                 int numberOfItems = Duke.list.size();
-                String[] listMessages = new String[numberOfItems];
+                String[] listMessages = new String[numberOfItems + 1];
+                listMessages[0] = "Here are the tasks in your list:";
                 for (int index = 0; index < numberOfItems; index++) {
-                    listMessages[index] = (index + 1) + ". " + Duke.list.get(index);
+                    Task task = Duke.list.get(index);
+                    listMessages[index + 1] = (index + 1) + ".[" + task.getStatusIcon() + "] " + task.description;
                 }
                 Duke.printMessages(listMessages);
                 continue;
             }
 
-            Duke.list.add(input);
+            if (command.equals("done")) {
+                int itemNumber = Integer.parseInt(inputSubsections[1]);
+                Task task = Duke.list.get(itemNumber - 1);
+                task.isDone = true;
+                String[] doneMessages = new String[]{
+                        "Nice! I've marked this task as done: ",
+                        "  [" + task.getStatusIcon() + "] " + task.description
+                };
+                Duke.printMessages(doneMessages);
+                continue;
+            }
+
+            Duke.list.add(new Task(input));
             String[] defaultMessages = { "added: " + input };
             Duke.printMessages(defaultMessages);
         }
