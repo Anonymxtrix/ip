@@ -1,15 +1,10 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Duke {
     public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    public static String OUTPUT_INDENT = "    ";
-    public static String TEXT_INDENT = " ";
-    public static String LINE = "____________________________________________________________";
     public static String LOGO = " ____        _        \n"
                               + "|  _ \\ _   _| | _____ \n"
                               + "| | | | | | | |/ / _ \\\n"
@@ -17,12 +12,15 @@ public class Duke {
                               + "|____/ \\__,_|_|\\_\\___|\n";
 
     public static String[] welcomeMessages = {"Hello! I'm Duke", "What can I do for you?"};
-    public static String[] goodbyeMessages = {"Bye. Hope to see you again soon!"};
+    public static Response welcomeResponse = new Response(String.join(System.lineSeparator(), welcomeMessages));
 
-    private static final List<Task> list = new ArrayList<>();
+    public static String[] goodbyeMessages = {"Bye. Hope to see you again soon!"};
+    public static Response goodbyeResponse = new Response(String.join(System.lineSeparator(), goodbyeMessages));
+
+    private static final TaskCollection tasks = new TaskCollection();
 
     public static void main(String[] args) throws IOException {
-        Duke.printMessages(welcomeMessages);
+        Duke.printResponse(Duke.welcomeResponse);
 
         while (true) {
             String input = Duke.getUserInput();
@@ -30,50 +28,43 @@ public class Duke {
             String command = inputSubsections[0];
             
             if (command.equals("bye")) {
-                Duke.printMessages(goodbyeMessages);
+                Duke.printResponse(Duke.goodbyeResponse);
                 break;
             }
 
             if (command.equals("list")) {
-                int numberOfItems = Duke.list.size();
-                String[] listMessages = new String[numberOfItems + 1];
-                listMessages[0] = "Here are the tasks in your list:";
-                for (int index = 0; index < numberOfItems; index++) {
-                    Task task = Duke.list.get(index);
-                    listMessages[index + 1] = (index + 1) + ".[" + task.getStatusIcon() + "] " + task.description;
-                }
-                Duke.printMessages(listMessages);
+                String[] listMessages = new String[] {"Here are the tasks in your list:", Duke.tasks.toString()};
+                Response listResponse = new Response(String.join(System.lineSeparator(), listMessages));
+                Duke.printResponse(listResponse);
                 continue;
             }
 
             if (command.equals("done")) {
                 int itemNumber = Integer.parseInt(inputSubsections[1]);
-                Task task = Duke.list.get(itemNumber - 1);
+                Task task = Duke.tasks.get(itemNumber);
                 task.isDone = true;
                 String[] doneMessages = new String[]{
                         "Nice! I've marked this task as done: ",
-                        "  [" + task.getStatusIcon() + "] " + task.description
+                        String.format("  %s", task.toString()),
                 };
-                Duke.printMessages(doneMessages);
+                Response doneResponse = new Response(String.join(System.lineSeparator(), doneMessages));
+                Duke.printResponse(doneResponse);
                 continue;
             }
 
-            Duke.list.add(new Task(input));
-            String[] defaultMessages = { "added: " + input };
-            Duke.printMessages(defaultMessages);
+            Task newTask = new Task(input);
+            Duke.tasks.add(newTask);
+            Response defaultResponse = new Response(String.format("added: %s", newTask.description));
+            Duke.printResponse(defaultResponse);
         }
     }
 
     /**
-     * Prints an array of messages to the console.
-     * @param messages The array of messages to be printed.
+     * Prints the Response to the console.
+     * @param response The Response to be printed.
      */
-    public static void printMessages(String[] messages) {
-        System.out.println(Duke.OUTPUT_INDENT + Duke.LINE);
-        for (String message : messages) {
-            System.out.println(Duke.OUTPUT_INDENT + Duke.TEXT_INDENT + message);
-        }
-        System.out.println(Duke.OUTPUT_INDENT + Duke.LINE);
+    public static void printResponse(Response response) {
+        System.out.println(response.toString());
     }
 
     /**
