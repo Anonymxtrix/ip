@@ -48,6 +48,48 @@ public class Duke {
                 continue;
             }
 
+            if (command.equals("deadline")) {
+                String BY_DELIMITER = " /by ";
+                String[] deadlineInputSubsections = inputSubsections[1].split(BY_DELIMITER);
+                String description = deadlineInputSubsections[0];
+                String by = deadlineInputSubsections[1];
+                Task deadline = new Deadline(description, by);
+                Duke.tasks.add(deadline);
+                Response toDoResponse = new Response();
+                toDoResponse.add("Got it. I've added this task:");
+                toDoResponse.add(String.format("  %s", deadline.toString()));
+                toDoResponse.add(String.format("Now you have %d tasks in the list.", Duke.tasks.size()));
+                Duke.printResponse(toDoResponse);
+                continue;
+            }
+
+            if (command.equals("event")) {
+                String AT_DELIMITER = " /at ";
+                String[] eventInputSubsections = inputSubsections[1].split(AT_DELIMITER);
+                String description = eventInputSubsections[0];
+                String at = eventInputSubsections[1];
+                Task event = new Event(description, at);
+                Duke.tasks.add(event);
+                Response toDoResponse = new Response();
+                toDoResponse.add("Got it. I've added this task:");
+                toDoResponse.add(String.format("  %s", event.toString()));
+                toDoResponse.add(String.format("Now you have %d tasks in the list.", Duke.tasks.size()));
+                Duke.printResponse(toDoResponse);
+                continue;
+            }
+
+            if (command.equals("todo")) {
+                String description = inputSubsections[1];
+                Task toDo = new ToDo(description);
+                Duke.tasks.add(toDo);
+                Response toDoResponse = new Response();
+                toDoResponse.add("Got it. I've added this task:");
+                toDoResponse.add(String.format("  %s", toDo.toString()));
+                toDoResponse.add(String.format("Now you have %d tasks in the list.", Duke.tasks.size()));
+                Duke.printResponse(toDoResponse);
+                continue;
+            }
+
             Task newTask = new Task(input);
             Duke.tasks.add(newTask);
             Response defaultResponse = new Response();
