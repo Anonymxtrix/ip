@@ -4,16 +4,6 @@
 public abstract class Request {
     private static final String COMMAND_DELIMITER = "\\s";
 
-    protected TaskCollection taskCollection;
-
-    /**
-     * Creates a Request to perform actions on a TaskCollection.
-     * @param taskCollection The target TaskCollection.
-     */
-    protected Request(TaskCollection taskCollection) {
-        this.taskCollection = taskCollection;
-    }
-
     /**
      * Gets the Action the Request requests to execute.
      * @return The Action to be executed.
@@ -38,7 +28,7 @@ public abstract class Request {
 
         switch (command) {
             case BYE:
-                return new ByeRequest(taskCollection);
+                return new ByeRequest();
 
             case DONE:
                 return new DoneRequest(taskCollection, commandInput);

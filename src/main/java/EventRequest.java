@@ -1,7 +1,7 @@
 /**
  * EventRequest represents a request from the user to create an Event in the application.
  */
-public class EventRequest extends Request {
+public class EventRequest extends TaskCollectionRequest {
     private static final String AT_DELIMITER = " /at ";
 
     private final Event event;

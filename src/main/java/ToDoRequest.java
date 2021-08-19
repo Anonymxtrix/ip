@@ -1,7 +1,7 @@
 /**
  * ToDoRequest represents a request from the user to create an ToDo in the application.
  */
-public class ToDoRequest extends Request {
+public class ToDoRequest extends TaskCollectionRequest {
     private final ToDo toDo;
 
     /**

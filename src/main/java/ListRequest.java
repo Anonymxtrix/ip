@@ -1,7 +1,7 @@
 /**
  * ListRequest represents a request from the user to list all the Tasks in the application.
  */
-public class ListRequest extends Request {
+public class ListRequest extends TaskCollectionRequest {
     /**
      * Creates a ListRequest.
      * @param taskCollection The target TaskCollection.

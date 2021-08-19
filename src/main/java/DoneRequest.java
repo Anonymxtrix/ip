@@ -1,7 +1,7 @@
 /**
  * ByeRequest represents a request from the user to mark a Task as done in the application.
  */
-public class DoneRequest extends Request {
+public class DoneRequest extends TaskCollectionRequest {
     private final int taskId;
 
     /**

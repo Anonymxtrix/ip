@@ -1,7 +1,7 @@
 /**
  * DeadlineRequest represents a request from the user to create a Deadline in the application.
  */
-public class DeadlineRequest extends Request {
+public class DeadlineRequest extends TaskCollectionRequest {
     private static final String BY_DELIMITER = " /by ";
 
     private final Deadline deadline;
