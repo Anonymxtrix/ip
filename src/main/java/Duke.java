@@ -22,56 +22,8 @@ public class Duke {
         while (true) {
             if (Duke.actions.isEmpty()) {
                 String input = Duke.getUserInput();
-                String[] inputSubsections = input.split("\\s", 2);
-                String command = inputSubsections[0];
-
-                Action action;
-                switch (command) {
-                    case "bye": {
-                        action = new GoodbyeUser();
-                        break;
-                    }
-                    case "list": {
-                        action = new ListTasks(Duke.tasks);
-                        break;
-                    }
-                    case "done": {
-                        int itemNumber = Integer.parseInt(inputSubsections[1]);
-                        Task task = Duke.tasks.get(itemNumber);
-                        action = new CompleteTask(task);
-                        break;
-                    }
-                    case "deadline": {
-                        String BY_DELIMITER = " /by ";
-                        String[] deadlineInputSubsections = inputSubsections[1].split(BY_DELIMITER);
-                        String description = deadlineInputSubsections[0];
-                        String by = deadlineInputSubsections[1];
-                        Task deadline = new Deadline(description, by);
-                        action = new AddTask(deadline, Duke.tasks);
-                        break;
-                    }
-                    case "event": {
-                        String AT_DELIMITER = " /at ";
-                        String[] eventInputSubsections = inputSubsections[1].split(AT_DELIMITER);
-                        String description = eventInputSubsections[0];
-                        String at = eventInputSubsections[1];
-                        Task event = new Event(description, at);
-                        action = new AddTask(event, Duke.tasks);
-                        break;
-                    }
-                    case "todo": {
-                        String description = inputSubsections[1];
-                        Task toDo = new ToDo(description);
-                        action = new AddTask(toDo, Duke.tasks);
-                        break;
-                    }
-                    default: {
-                        Task newTask = new Task(inputSubsections[1]);
-                        action = new AddTask(newTask, Duke.tasks);
-                        break;
-                    }
-                }
-                Duke.actions.add(action);
+                Request request = Request.create(Duke.tasks, input);
+                Duke.actions.add(request.action());
             }
 
             Action action = Duke.actions.remove();
