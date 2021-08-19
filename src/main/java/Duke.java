@@ -30,9 +30,8 @@ public class Duke {
             }
 
             if (command.equals("list")) {
-                Response listResponse = new Response();
-                listResponse.add("Here are the tasks in your list:");
-                listResponse.add(Duke.tasks.toString());
+                Action listTasks = new ListTasks(Duke.tasks);
+                Response listResponse = listTasks.execute();
                 Duke.printResponse(listResponse);
                 continue;
             }
@@ -40,10 +39,8 @@ public class Duke {
             if (command.equals("done")) {
                 int itemNumber = Integer.parseInt(inputSubsections[1]);
                 Task task = Duke.tasks.get(itemNumber);
-                task.isDone = true;
-                Response doneResponse = new Response();
-                doneResponse.add("Nice! I've marked this task as done: ");
-                doneResponse.add(String.format("  %s", task.toString()));
+                Action completeTask = new CompleteTask(task);
+                Response doneResponse = completeTask.execute();
                 Duke.printResponse(doneResponse);
                 continue;
             }
@@ -54,12 +51,9 @@ public class Duke {
                 String description = deadlineInputSubsections[0];
                 String by = deadlineInputSubsections[1];
                 Task deadline = new Deadline(description, by);
-                Duke.tasks.add(deadline);
-                Response toDoResponse = new Response();
-                toDoResponse.add("Got it. I've added this task:");
-                toDoResponse.add(String.format("  %s", deadline.toString()));
-                toDoResponse.add(String.format("Now you have %d tasks in the list.", Duke.tasks.size()));
-                Duke.printResponse(toDoResponse);
+                Action addTask = new AddTask(deadline, Duke.tasks);
+                Response deadlineResponse = addTask.execute();
+                Duke.printResponse(deadlineResponse);
                 continue;
             }
 
@@ -69,31 +63,24 @@ public class Duke {
                 String description = eventInputSubsections[0];
                 String at = eventInputSubsections[1];
                 Task event = new Event(description, at);
-                Duke.tasks.add(event);
-                Response toDoResponse = new Response();
-                toDoResponse.add("Got it. I've added this task:");
-                toDoResponse.add(String.format("  %s", event.toString()));
-                toDoResponse.add(String.format("Now you have %d tasks in the list.", Duke.tasks.size()));
-                Duke.printResponse(toDoResponse);
+                Action addTask = new AddTask(event, Duke.tasks);
+                Response eventResponse = addTask.execute();
+                Duke.printResponse(eventResponse);
                 continue;
             }
 
             if (command.equals("todo")) {
                 String description = inputSubsections[1];
                 Task toDo = new ToDo(description);
-                Duke.tasks.add(toDo);
-                Response toDoResponse = new Response();
-                toDoResponse.add("Got it. I've added this task:");
-                toDoResponse.add(String.format("  %s", toDo.toString()));
-                toDoResponse.add(String.format("Now you have %d tasks in the list.", Duke.tasks.size()));
+                Action addTask = new AddTask(toDo, Duke.tasks);
+                Response toDoResponse = addTask.execute();
                 Duke.printResponse(toDoResponse);
                 continue;
             }
 
             Task newTask = new Task(input);
-            Duke.tasks.add(newTask);
-            Response defaultResponse = new Response();
-            defaultResponse.add(String.format("added: %s", newTask.description));
+            Action addTask = new AddTask(newTask, Duke.tasks);
+            Response defaultResponse = addTask.execute();
             Duke.printResponse(defaultResponse);
         }
     }
