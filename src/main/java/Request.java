@@ -32,10 +32,12 @@ public abstract class Request {
         String commandInput = substrings.length > 1 ? substrings[1] : "";
         Command command = Command.parseFrom(commandString);
 
+        if (command == null) {
+            return new ToDoRequest(taskCollection, requestString);
+        }
+
         switch (command) {
             case BYE:
-                return new ByeRequest(taskCollection);
-            default:
                 return new ByeRequest(taskCollection);
 
             case DONE:
@@ -50,5 +52,7 @@ public abstract class Request {
             case TODO:
                 return new ToDoRequest(taskCollection, commandInput);
         }
+
+        return null;
     }
 }

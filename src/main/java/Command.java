@@ -4,8 +4,7 @@ public enum Command {
     DONE("done"),
     DEADLINE("deadline"),
     EVENT("event"),
-    TODO("todo"),
-    UNKNOWN("");
+    TODO("todo");
 
     /**
      * The name of the Command.
@@ -31,6 +30,6 @@ public enum Command {
                 return command;
             }
         }
-        return Command.UNKNOWN;
+        return null;
     }
 }
