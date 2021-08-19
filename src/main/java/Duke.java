@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Queue;
+import java.util.LinkedList;
 
 public class Duke {
     public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -12,77 +14,73 @@ public class Duke {
                               + "|____/ \\__,_|_|\\_\\___|\n";
 
     private static final TaskCollection tasks = new TaskCollection();
+    private static final Queue<Action> actions = new LinkedList<>();
 
     public static void main(String[] args) throws IOException {
-        Action welcome = new WelcomeUser();
-        Response welcomeResponse = welcome.execute();
-        Duke.printResponse(welcomeResponse);
+        Duke.actions.add(new WelcomeUser());
 
         while (true) {
-            String input = Duke.getUserInput();
-            String[] inputSubsections = input.split("\\s", 2);
-            String command = inputSubsections[0];
-            
-            if (command.equals("bye")) {
-                Action goodbye = new GoodbyeUser();
-                Response goodbyeResponse = goodbye.execute();
-                Duke.printResponse(goodbyeResponse);
+            if (Duke.actions.isEmpty()) {
+                String input = Duke.getUserInput();
+                String[] inputSubsections = input.split("\\s", 2);
+                String command = inputSubsections[0];
+
+                Action action;
+                switch (command) {
+                    case "bye": {
+                        action = new GoodbyeUser();
+                        break;
+                    }
+                    case "list": {
+                        action = new ListTasks(Duke.tasks);
+                        break;
+                    }
+                    case "done": {
+                        int itemNumber = Integer.parseInt(inputSubsections[1]);
+                        Task task = Duke.tasks.get(itemNumber);
+                        action = new CompleteTask(task);
+                        break;
+                    }
+                    case "deadline": {
+                        String BY_DELIMITER = " /by ";
+                        String[] deadlineInputSubsections = inputSubsections[1].split(BY_DELIMITER);
+                        String description = deadlineInputSubsections[0];
+                        String by = deadlineInputSubsections[1];
+                        Task deadline = new Deadline(description, by);
+                        action = new AddTask(deadline, Duke.tasks);
+                        break;
+                    }
+                    case "event": {
+                        String AT_DELIMITER = " /at ";
+                        String[] eventInputSubsections = inputSubsections[1].split(AT_DELIMITER);
+                        String description = eventInputSubsections[0];
+                        String at = eventInputSubsections[1];
+                        Task event = new Event(description, at);
+                        action = new AddTask(event, Duke.tasks);
+                        break;
+                    }
+                    case "todo": {
+                        String description = inputSubsections[1];
+                        Task toDo = new ToDo(description);
+                        action = new AddTask(toDo, Duke.tasks);
+                        break;
+                    }
+                    default: {
+                        Task newTask = new Task(inputSubsections[1]);
+                        action = new AddTask(newTask, Duke.tasks);
+                        break;
+                    }
+                }
+                Duke.actions.add(action);
+            }
+
+            Action action = Duke.actions.remove();
+            Response response = action.execute();
+            Duke.printResponse(response);
+
+            if (action instanceof GoodbyeUser) {
                 break;
             }
-
-            if (command.equals("list")) {
-                Action listTasks = new ListTasks(Duke.tasks);
-                Response listResponse = listTasks.execute();
-                Duke.printResponse(listResponse);
-                continue;
-            }
-
-            if (command.equals("done")) {
-                int itemNumber = Integer.parseInt(inputSubsections[1]);
-                Task task = Duke.tasks.get(itemNumber);
-                Action completeTask = new CompleteTask(task);
-                Response doneResponse = completeTask.execute();
-                Duke.printResponse(doneResponse);
-                continue;
-            }
-
-            if (command.equals("deadline")) {
-                String BY_DELIMITER = " /by ";
-                String[] deadlineInputSubsections = inputSubsections[1].split(BY_DELIMITER);
-                String description = deadlineInputSubsections[0];
-                String by = deadlineInputSubsections[1];
-                Task deadline = new Deadline(description, by);
-                Action addTask = new AddTask(deadline, Duke.tasks);
-                Response deadlineResponse = addTask.execute();
-                Duke.printResponse(deadlineResponse);
-                continue;
-            }
-
-            if (command.equals("event")) {
-                String AT_DELIMITER = " /at ";
-                String[] eventInputSubsections = inputSubsections[1].split(AT_DELIMITER);
-                String description = eventInputSubsections[0];
-                String at = eventInputSubsections[1];
-                Task event = new Event(description, at);
-                Action addTask = new AddTask(event, Duke.tasks);
-                Response eventResponse = addTask.execute();
-                Duke.printResponse(eventResponse);
-                continue;
-            }
-
-            if (command.equals("todo")) {
-                String description = inputSubsections[1];
-                Task toDo = new ToDo(description);
-                Action addTask = new AddTask(toDo, Duke.tasks);
-                Response toDoResponse = addTask.execute();
-                Duke.printResponse(toDoResponse);
-                continue;
-            }
-
-            Task newTask = new Task(input);
-            Action addTask = new AddTask(newTask, Duke.tasks);
-            Response defaultResponse = addTask.execute();
-            Duke.printResponse(defaultResponse);
         }
     }
 
