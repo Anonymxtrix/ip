@@ -1,11 +1,11 @@
 /**
- * ByeRequest represents a request from the user to mark a Task as done in the application.
+ * DoneRequest represents a request from the user to mark a Task as done in the application.
  */
 public class DoneRequest extends TaskCollectionRequest {
     private final int taskId;
 
     /**
-     * Creates a ByeRequest.
+     * Creates a DoneRequest.
      * @param taskCollection The target TaskCollection.
      * @param requestString The request String.
      */

@@ -1,3 +1,6 @@
+/**
+ * A Command represents a string in a Request that instructs the application to perform an Action.
+ */
 public enum Command {
     BYE("bye"),
     LIST("list"),

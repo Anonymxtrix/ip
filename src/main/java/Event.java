@@ -6,7 +6,7 @@ public class Event extends Task {
 
     /**
      * Creates an Event with the provided description and start and end date/time.
-     * @param description The description of the Deadline task.
+     * @param description The description of the Event task.
      * @param at The date/time of the Event.
      */
     public Event(String description, String at) {
