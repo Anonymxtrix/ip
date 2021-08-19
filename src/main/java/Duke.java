@@ -11,11 +11,8 @@ public class Duke {
                               + "| |_| | |_| |   <  __/\n"
                               + "|____/ \\__,_|_|\\_\\___|\n";
 
-    public static String[] welcomeMessages = {"Hello! I'm Duke", "What can I do for you?"};
-    public static Response welcomeResponse = new Response(String.join(System.lineSeparator(), welcomeMessages));
-
-    public static String[] goodbyeMessages = {"Bye. Hope to see you again soon!"};
-    public static Response goodbyeResponse = new Response(String.join(System.lineSeparator(), goodbyeMessages));
+    public static Response welcomeResponse = new Response(new String[]{ "Hello! I'm Duke", "What can I do for you?" });
+    public static Response goodbyeResponse = new Response(new String[]{ "Bye. Hope to see you again soon!" });
 
     private static final TaskCollection tasks = new TaskCollection();
 
@@ -33,8 +30,9 @@ public class Duke {
             }
 
             if (command.equals("list")) {
-                String[] listMessages = new String[] {"Here are the tasks in your list:", Duke.tasks.toString()};
-                Response listResponse = new Response(String.join(System.lineSeparator(), listMessages));
+                Response listResponse = new Response();
+                listResponse.add("Here are the tasks in your list:");
+                listResponse.add(Duke.tasks.toString());
                 Duke.printResponse(listResponse);
                 continue;
             }
@@ -43,18 +41,17 @@ public class Duke {
                 int itemNumber = Integer.parseInt(inputSubsections[1]);
                 Task task = Duke.tasks.get(itemNumber);
                 task.isDone = true;
-                String[] doneMessages = new String[]{
-                        "Nice! I've marked this task as done: ",
-                        String.format("  %s", task.toString()),
-                };
-                Response doneResponse = new Response(String.join(System.lineSeparator(), doneMessages));
+                Response doneResponse = new Response();
+                doneResponse.add("Nice! I've marked this task as done: ");
+                doneResponse.add(String.format("  %s", task.toString()));
                 Duke.printResponse(doneResponse);
                 continue;
             }
 
             Task newTask = new Task(input);
             Duke.tasks.add(newTask);
-            Response defaultResponse = new Response(String.format("added: %s", newTask.description));
+            Response defaultResponse = new Response();
+            defaultResponse.add(String.format("added: %s", newTask.description));
             Duke.printResponse(defaultResponse);
         }
     }

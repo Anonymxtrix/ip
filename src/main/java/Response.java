@@ -7,14 +7,39 @@ public class Response {
 
     public static String LINE = "____________________________________________________________";
 
-    private final String message;
+    private String message;
+
+    /**
+     * Creates a response with an empty String message.
+     */
+    public Response() {
+        this("");
+    }
 
     /**
      * Creates a response with the specified String message.
      * @param message The Response message.
      */
     public Response(String message) {
-        this.message = message;
+        this(new String[]{ message });
+    }
+
+    /**
+     * Creates a response with the specified String array.
+     * @param messages The Response message array.
+     */
+    public Response(String[] messages) {
+        this.message = String.join(System.lineSeparator(), messages);
+    }
+
+    /**
+     * Adds the specified message to the response.
+     * @param message Message to be added.
+     */
+    public void add(String message) {
+        this.message = this.message.equals("")
+            ? message
+            : this.message + System.lineSeparator() + message;
     }
 
     /**
