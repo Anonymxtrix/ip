@@ -11,13 +11,12 @@ public class Duke {
                               + "| |_| | |_| |   <  __/\n"
                               + "|____/ \\__,_|_|\\_\\___|\n";
 
-    public static Response welcomeResponse = new Response(new String[]{ "Hello! I'm Duke", "What can I do for you?" });
-    public static Response goodbyeResponse = new Response(new String[]{ "Bye. Hope to see you again soon!" });
-
     private static final TaskCollection tasks = new TaskCollection();
 
     public static void main(String[] args) throws IOException {
-        Duke.printResponse(Duke.welcomeResponse);
+        Action welcome = new WelcomeUser();
+        Response welcomeResponse = welcome.execute();
+        Duke.printResponse(welcomeResponse);
 
         while (true) {
             String input = Duke.getUserInput();
@@ -25,7 +24,9 @@ public class Duke {
             String command = inputSubsections[0];
             
             if (command.equals("bye")) {
-                Duke.printResponse(Duke.goodbyeResponse);
+                Action goodbye = new GoodbyeUser();
+                Response goodbyeResponse = goodbye.execute();
+                Duke.printResponse(goodbyeResponse);
                 break;
             }
 
